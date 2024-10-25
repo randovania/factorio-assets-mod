@@ -38,12 +38,18 @@ jobs:
               ${{ steps.package_details.outputs.name }}-${{ steps.package_details.outputs.version }}/
           )
 
+      - name: List stuff
+        run: find .
+        
+      - name: List dist
+        run: find dist/
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4.0.0
         with:
           name: Package
           if-no-files-found: error
-          path: "dist/*.zip"
+          path: dist/
 
   release-github:
     runs-on: ubuntu-latest
