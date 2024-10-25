@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   package:
@@ -62,11 +62,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           UPDATE_EXISTING: "true"
           VERSION_REGEX: ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
-      
-      - name: Tag Filter
-        uses: actions/bin/filter@3c0b4f0e63ea54ea5df2914b4fabf383368cd0da
-        with:
-          args: tag
       
       - name: Upload GitHub artifacts
         uses: Roang-zero1/github-upload-release-artifacts-action@master
