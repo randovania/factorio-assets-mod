@@ -11,15 +11,36 @@ jobs:
   package:
     runs-on: ubuntu-latest
     steps:
-      - name: Create Factorio mod package
-        uses: Roang-zero1/factorio-mod-package@master
+      - name: Get Package details
+        id: package_details
+        shell: bash
+        run: |
+          echo "name=$(jq -r .name info.json)" >> $GITHUB_OUTPUT
+          echo "version=$(jq -r .version info.json)" >> $GITHUB_OUTPUT
+
+      - name: Create Package
+        shell: bash
+        run: |
+          mkdir -p build
+          tar cf build/package.tar \
+            --transform 's|./|${{ steps.package_details.outputs.name }}-${{ steps.package_details.outputs.version }}/|' \
+            --exclude '.git' --exclude '.github' --exclude 'dist' --exclude 'build' \
+            --exclude 'tools' \
+            .
+          
+          mkdir -p dist
+          (
+            cd build; zip -r \
+              ../dist/${{ steps.package_details.outputs.name }}-${{ steps.package_details.outputs.version }} \
+              ${{ steps.package_details.outputs.name }}-${{ steps.package_details.outputs.version }}/
+          )
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.0.0
         with:
           name: Package
           if-no-files-found: error
-          path: "*.zip"
+          path: "dist/*.zip"
 
   release-github:
     runs-on: ubuntu-latest
