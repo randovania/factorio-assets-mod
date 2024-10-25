@@ -34,15 +34,9 @@ jobs:
           mkdir -p dist
           (
             cd build; zip -r \
-              ../dist/${{ steps.package_details.outputs.name }}-${{ steps.package_details.outputs.version }} \
+              ../dist/${{ steps.package_details.outputs.name }}-${{ steps.package_details.outputs.version }}.zip \
               ${{ steps.package_details.outputs.name }}-${{ steps.package_details.outputs.version }}/
           )
-
-      - name: List stuff
-        run: find .
-        
-      - name: List dist
-        run: find dist/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.0.0
