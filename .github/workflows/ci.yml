@@ -25,11 +25,11 @@ jobs:
         shell: bash
         run: |
           mkdir -p build
-          tar cf build/package.tar \
+          tar c \
             --transform 's|./|${{ steps.package_details.outputs.name }}-${{ steps.package_details.outputs.version }}/|' \
             --exclude '.git' --exclude '.github' --exclude 'dist' --exclude 'build' \
             --exclude 'tools' \
-            .
+            . | tar x -C build/
           
           mkdir -p dist
           (
