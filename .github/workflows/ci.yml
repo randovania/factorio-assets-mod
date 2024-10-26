@@ -89,44 +89,49 @@ jobs:
         run: python -m pip install requests
 
       - name: Factorio release
-        run: |
-          import sys
-          import requests
-          from os import getenv
+        uses: henriquegemignani/factorio-mod-uploader@main
+        with:
+          zip_file: "dist/${{ needs.package.outputs.name }}-${{ needs.package.outputs.version }}.zip"
+          api_key: "${{ secrets.FACTORIO_API_KEY }}"
+        
+          # run: |
+        #   import sys
+        #   import requests
+        #   from os import getenv
 
-          MOD_PORTAL_URL = "https://mods.factorio.com"
-          INIT_UPLOAD_URL = f"{MOD_PORTAL_URL}/api/v2/mods/releases/init_upload"
+        #   MOD_PORTAL_URL = "https://mods.factorio.com"
+        #   INIT_UPLOAD_URL = f"{MOD_PORTAL_URL}/api/v2/mods/releases/init_upload"
 
-          apikey = getenv("MOD_UPLOAD_API_KEY")
-          modname = getenv("MOD_UPLOAD_NAME")
-          zipfilepath = getenv("MOD_UPLOAD_FILE")
+        #   apikey = getenv("MOD_UPLOAD_API_KEY")
+        #   modname = getenv("MOD_UPLOAD_NAME")
+        #   zipfilepath = getenv("MOD_UPLOAD_FILE")
 
-          request_body = data={"mod":modname}
-          request_headers = {"Authorization": f"Bearer {apikey}"}
+        #   request_body = data={"mod":modname}
+        #   request_headers = {"Authorization": f"Bearer {apikey}"}
 
-          response = requests.post(
-            INIT_UPLOAD_URL,
-            data=request_body,
-            headers=request_headers)
+        #   response = requests.post(
+        #     INIT_UPLOAD_URL,
+        #     data=request_body,
+        #     headers=request_headers)
 
-          if not response.ok:	
-            print(f"init_upload failed: {response.text}")
-            sys.exit(1)
+        #   if not response.ok:	
+        #     print(f"init_upload failed: {response.text}")
+        #     sys.exit(1)
 
-          upload_url = response.json()["upload_url"]
+        #   upload_url = response.json()["upload_url"]
 
-          with open(zipfilepath, "rb") as f:	
-            request_body = {"file": f}	
-            response = requests.post(upload_url, files=request_body)
+        #   with open(zipfilepath, "rb") as f:	
+        #     request_body = {"file": f}	
+        #     response = requests.post(upload_url, files=request_body)
 
-          if not response.ok:	
-            print(f"upload failed: {response.text}")	
-            sys.exit(1)
+        #   if not response.ok:	
+        #     print(f"upload failed: {response.text}")	
+        #     sys.exit(1)
 
-          print(f"upload successful: {response.text}")
-        shell: python {0}
-        env:
-          MOD_UPLOAD_NAME: "${{ needs.package.outputs.name }}"
-          MOD_UPLOAD_FILE: "dist/${{ needs.package.outputs.name }}-${{ needs.package.outputs.version }}.zip"
-          MOD_UPLOAD_API_KEY: "${{ secrets.FACTORIO_API_KEY }}"
+        #   print(f"upload successful: {response.text}")
+        # shell: python {0}
+        # env:
+        #   MOD_UPLOAD_NAME: "${{ needs.package.outputs.name }}"
+        #   MOD_UPLOAD_FILE: "dist/${{ needs.package.outputs.name }}-${{ needs.package.outputs.version }}.zip"
+        #   MOD_UPLOAD_API_KEY: "${{ secrets.FACTORIO_API_KEY }}"
 
