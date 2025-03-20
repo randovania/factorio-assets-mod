@@ -43,7 +43,7 @@ jobs:
           )
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4.6.1
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: Package
           if-no-files-found: error
